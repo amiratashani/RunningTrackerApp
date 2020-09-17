@@ -1,9 +1,8 @@
-package com.example.runningtrackerapp
+package com.example.runningtrackerapp.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.runningtrackerapp.db.Run
-import com.example.runningtrackerapp.db.RunDAO
+import com.example.runningtrackerapp.R
 
 class MainActivity : AppCompatActivity() {
 
