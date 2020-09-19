@@ -9,8 +9,9 @@ import androidx.fragment.app.viewModels
 import com.example.runningtrackerapp.R
 import com.example.runningtrackerapp.ui.viewmodels.StatisticsViewModel
 import dagger.hilt.EntryPoint
+import dagger.hilt.android.AndroidEntryPoint
 
-@EntryPoint
+@AndroidEntryPoint
 class StatisticsFragment : Fragment() {
 
     private val viewModel: StatisticsViewModel by viewModels()
