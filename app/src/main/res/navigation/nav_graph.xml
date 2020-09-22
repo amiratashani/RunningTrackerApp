@@ -5,6 +5,11 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/setupFragment">
 
+    <action
+        android:id="@+id/action_global_trackingFragment"
+        app:destination="@id/trackingFragment"
+        app:launchSingleTop="true"/>
+
     <fragment
         android:id="@+id/runFragment"
         android:name="com.example.runningtrackerapp.ui.fragments.RunFragment"
@@ -17,8 +22,9 @@
     <fragment
         android:id="@+id/setupFragment"
         android:name="com.example.runningtrackerapp.ui.fragments.SetupFragment"
-        tools:layout="@layout/fragment_setup"
-        android:label="SetupFragment" >
+        android:label="SetupFragment"
+        tools:layout="@layout/fragment_setup">
+
         <action
             android:id="@+id/action_setupFragment_to_runFragment"
             app:destination="@id/runFragment" />
@@ -26,13 +32,13 @@
     <fragment
         android:id="@+id/statisticsFragment"
         android:name="com.example.runningtrackerapp.ui.fragments.StatisticsFragment"
-        tools:layout="@layout/fragment_statistics"
-        android:label="StatisticsFragment" />
+        android:label="StatisticsFragment"
+        tools:layout="@layout/fragment_statistics" />
     <fragment
         android:id="@+id/trackingFragment"
         android:name="com.example.runningtrackerapp.ui.fragments.TrackingFragment"
-        tools:layout="@layout/fragment_tracking"
-        android:label="TrackingFragment" >
+        android:label="TrackingFragment"
+        tools:layout="@layout/fragment_tracking">
         <action
             android:id="@+id/action_trackingFragment_to_runFragment"
             app:destination="@id/runFragment" />
@@ -40,6 +46,6 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.runningtrackerapp.ui.fragments.SettingsFragment"
-        tools:layout="@layout/fragment_settings"
-        android:label="SettingsFragment" />
+        android:label="SettingsFragment"
+        tools:layout="@layout/fragment_settings" />
 </navigation>
