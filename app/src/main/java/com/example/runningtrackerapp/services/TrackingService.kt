@@ -40,21 +40,28 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
+import dagger.hilt.EntryPoint
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
 
 typealias Polyline = MutableList<LatLng>
 typealias Polylines = MutableList<Polyline>
 
+@AndroidEntryPoint
 class TrackingService : LifecycleService() {
     var isFirstRun = true
+
+    @Inject
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private val timeRunInSeconds = MutableLiveData<Long>()
 
+    @Inject
     lateinit var baseNotificationBuilder: NotificationCompat.Builder
     lateinit var curNotificationBuilder: NotificationCompat.Builder
 
@@ -75,7 +82,7 @@ class TrackingService : LifecycleService() {
 
     override fun onCreate() {
         super.onCreate()
-
+        curNotificationBuilder = baseNotificationBuilder
         postInitialValues()
         fusedLocationProviderClient = FusedLocationProviderClient(this)
 
@@ -238,14 +245,6 @@ class TrackingService : LifecycleService() {
             createNotificationChannel(notificationManager)
         }
 
-        baseNotificationBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setAutoCancel(false)
-            .setOngoing(true)
-            .setSmallIcon(R.drawable.ic_directions_run_black_24dp)
-            .setContentTitle("Running App")
-            .setContentText("00:00:00")
-            .setContentIntent(getMainActivityPendingIntent())
-        curNotificationBuilder = baseNotificationBuilder
 
         startForeground(NOTIFICATION_ID, baseNotificationBuilder.build())
 
@@ -267,15 +266,6 @@ class TrackingService : LifecycleService() {
         notificationManager.createNotificationChannel(channel)
     }
 
-
-    private fun getMainActivityPendingIntent() = PendingIntent.getActivity(
-        this,
-        0,
-        Intent(this, MainActivity::class.java).also {
-            it.action = ACTION_SHOW_TRACKING_FRAGMENT
-        },
-        FLAG_UPDATE_CURRENT
-    )
 
     private fun getMainActivityPendingIntentWithDeepLink() = NavDeepLinkBuilder(this)
         .setGraph(R.navigation.nav_graph)
