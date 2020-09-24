@@ -6,9 +6,7 @@ import javax.inject.Inject
 
 class MainRepository @Inject constructor(val runDao: RunDAO) {
 
-    companion object{
 
-    }
 
     suspend fun insertRun(run: Run) = runDao.insertRun(run)
 

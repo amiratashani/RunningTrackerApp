@@ -14,6 +14,7 @@ import com.example.runningtrackerapp.other.Constants.ACTION_START_OR_RESUME_SERV
 import com.example.runningtrackerapp.other.Constants.MAP_ZOOM
 import com.example.runningtrackerapp.other.Constants.POLYLINE_COLOR
 import com.example.runningtrackerapp.other.Constants.POLYLINE_WIDTH
+import com.example.runningtrackerapp.other.Utility
 import com.example.runningtrackerapp.services.Polyline
 import com.example.runningtrackerapp.services.TrackingService
 import com.example.runningtrackerapp.ui.viewmodels.MainViewModel
@@ -29,9 +30,13 @@ import timber.log.Timber
 class TrackingFragment : Fragment(R.layout.fragment_tracking) {
 
     private val viewModel: MainViewModel by viewModels()
-    private var map: GoogleMap? = null
+
     private var pathPoints = mutableListOf<Polyline>()
     private var isTracking = false
+
+    private var map: GoogleMap? = null
+
+    private var curTimeInMillis = 0L
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,6 +72,12 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
             pathPoints = it
             addLatestPolyline()
             moveCameraToUser()
+        })
+
+        TrackingService.timeRunInMillis.observe(viewLifecycleOwner, Observer {
+            curTimeInMillis = it
+            val formattedTime = Utility.getFormattedStopWatchTime(curTimeInMillis, true)
+            tvTimer.text = formattedTime
         })
     }
 
