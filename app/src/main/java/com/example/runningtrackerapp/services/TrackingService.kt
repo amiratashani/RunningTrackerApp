@@ -75,12 +75,15 @@ class TrackingService : LifecycleService() {
 
     override fun onCreate() {
         super.onCreate()
+
         postInitialValues()
         fusedLocationProviderClient = FusedLocationProviderClient(this)
 
         isTracking.observe(this, Observer {
             updateLocationTracking(it)
+            updateNotificationTrackingState(it)
         })
+
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -144,8 +147,8 @@ class TrackingService : LifecycleService() {
     }
 
     private fun updateNotificationTrackingState(isTracking: Boolean) {
-        val notificationActionText = if(isTracking) "Pause" else "Resume"
-        val pendingIntent = if(isTracking) {
+        val notificationActionText = if (isTracking) "Pause" else "Resume"
+        val pendingIntent = if (isTracking) {
             val pauseIntent = Intent(this, TrackingService::class.java).apply {
                 action = ACTION_PAUSE_SERVICE
             }
@@ -157,7 +160,8 @@ class TrackingService : LifecycleService() {
             PendingIntent.getService(this, 2, resumeIntent, FLAG_UPDATE_CURRENT)
         }
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         curNotificationBuilder.javaClass.getDeclaredField("mActions").apply {
             isAccessible = true
@@ -234,16 +238,22 @@ class TrackingService : LifecycleService() {
             createNotificationChannel(notificationManager)
         }
 
-         baseNotificationBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+        baseNotificationBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setAutoCancel(false)
             .setOngoing(true)
             .setSmallIcon(R.drawable.ic_directions_run_black_24dp)
             .setContentTitle("Running App")
             .setContentText("00:00:00")
             .setContentIntent(getMainActivityPendingIntent())
+        curNotificationBuilder = baseNotificationBuilder
 
         startForeground(NOTIFICATION_ID, baseNotificationBuilder.build())
 
+        timeRunInSeconds.observe(this, Observer {
+            val notification = curNotificationBuilder
+                .setContentText(Utility.getFormattedStopWatchTime(it * 1000L))
+            notificationManager.notify(NOTIFICATION_ID, notification.build())
+        })
     }
 
 
