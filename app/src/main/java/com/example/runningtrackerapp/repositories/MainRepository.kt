@@ -4,7 +4,12 @@ import com.example.runningtrackerapp.db.Run
 import com.example.runningtrackerapp.db.RunDAO
 import javax.inject.Inject
 
-class MainRepository @Inject constructor(val runDao:RunDAO) {
+class MainRepository @Inject constructor(val runDao: RunDAO) {
+
+    companion object{
+
+    }
+
     suspend fun insertRun(run: Run) = runDao.insertRun(run)
 
     suspend fun deleteRun(run: Run) = runDao.deleteRun(run)
