@@ -91,7 +91,6 @@ class TrackingService : LifecycleService() {
             updateLocationTracking(it)
             updateNotificationTrackingState(it)
         })
-
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
