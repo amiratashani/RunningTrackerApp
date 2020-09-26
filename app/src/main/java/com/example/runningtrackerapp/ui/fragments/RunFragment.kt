@@ -8,8 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.runningtrackerapp.R
+import com.example.runningtrackerapp.adapters.RunAdapter
 import com.example.runningtrackerapp.other.Constants.REQUEST_CODE_LOCATION_PERMISSION
 import com.example.runningtrackerapp.other.Utility
 import com.example.runningtrackerapp.ui.viewmodels.MainViewModel
@@ -24,20 +27,37 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private val viewModel: MainViewModel by viewModels()
 
+    lateinit var runAdapter: RunAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        requestPermissions()
+
         return inflater.inflate(R.layout.fragment_run, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requestPermissions()
+        setupRecycleView()
+
+        viewModel.runsSortedByDate.observe(viewLifecycleOwner, Observer {
+            runAdapter.submitList(it)
+        })
+
         fab.setOnClickListener {
             findNavController().navigate(R.id.action_runFragment_to_trackingFragment)
         }
-        super.onViewCreated(view, savedInstanceState)
     }
+
+    private fun setupRecycleView() =
+        rvRuns.apply {
+            runAdapter = RunAdapter()
+            adapter = runAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+
+        }
 
     private fun requestPermissions() {
         if (Utility.hasLocationPermissions(requireContext())) {
@@ -81,7 +101,7 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults,this)
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 
 
