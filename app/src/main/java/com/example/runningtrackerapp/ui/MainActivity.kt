@@ -30,7 +30,10 @@ class MainActivity : AppCompatActivity() {
 
         Timber.d("MainActivity:onCreate")
         setSupportActionBar(toolbar)
+
+
         bottomNavigationView.setupWithNavController(nav_host_fragment.findNavController())
+        bottomNavigationView.setOnNavigationItemReselectedListener{/*NO OPERATION*/}
 
         nav_host_fragment.findNavController()
             .addOnDestinationChangedListener { _, destination, _ ->
