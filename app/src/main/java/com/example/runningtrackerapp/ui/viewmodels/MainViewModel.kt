@@ -70,6 +70,6 @@ class MainViewModel @ViewModelInject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        Timber.d("ClearMainviewmodel")
+        Timber.d(" ")
     }
 }
