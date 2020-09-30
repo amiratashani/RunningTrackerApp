@@ -35,7 +35,7 @@ import javax.inject.Inject
 const val CANCEL_TRACKING_DIALOG_TAG = "CancelDialog"
 
 @AndroidEntryPoint
-class TrackingFragment : Fragment(R.layout.fragment_tracking) {
+class TrackingFragment : Fragment() {
 
     private val viewModel: MainViewModel by viewModels()
 
