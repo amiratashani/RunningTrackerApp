@@ -15,17 +15,17 @@ import com.example.runningtrackerapp.other.Constants.KEY_WEIGHT
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlinx.android.synthetic.main.fragment_setup.*
+import kotlinx.android.synthetic.main.fragment_setup.etName
+import kotlinx.android.synthetic.main.fragment_setup.etWeight
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class SettingsFragment : Fragment() {
 
     @Inject
-    lateinit var sharedPref: SharedPreferences
-
-    @set:Inject
-    var isFirstAppOpen = true
+    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,43 +37,38 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if(!isFirstAppOpen) {
-            val navOptions = NavOptions.Builder()
-                .setPopUpTo(R.id.setupFragment, true)
-                .build()
-            findNavController().navigate(
-                R.id.action_setupFragment_to_runFragment,
-                savedInstanceState,
-                navOptions
-            )
-        }
-
-        tvContinue.setOnClickListener {
-            val success = writePersonalDataToSharedPref()
+        loadFieldsFromSharedPref()
+        btnApplyChanges.setOnClickListener {
+            val success = applyChangesToSharedPref()
             if(success) {
-                findNavController().navigate(R.id.action_setupFragment_to_runFragment)
+                Snackbar.make(view, "Saved changes", Snackbar.LENGTH_LONG).show()
             } else {
-                Snackbar.make(requireView(), "Please enter all the fields", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(view, "Please fill out all the fields", Snackbar.LENGTH_LONG).show()
             }
         }
     }
 
-    private fun writePersonalDataToSharedPref(): Boolean {
-        val name = etName.text.toString()
-        val weight = etWeight.text.toString()
-        if(name.isEmpty() || weight.isEmpty()) {
+    private fun loadFieldsFromSharedPref() {
+        val name = sharedPreferences.getString(KEY_NAME, "")
+        val weight = sharedPreferences.getFloat(KEY_WEIGHT, 80f)
+        etName.setText(name)
+        etWeight.setText(weight.toString())
+    }
+
+    private fun applyChangesToSharedPref(): Boolean {
+        val nameText = etName.text.toString()
+        val weightText = etWeight.text.toString()
+        if(nameText.isEmpty() || weightText.isEmpty()) {
             return false
         }
-        sharedPref.edit()
-            .putString(KEY_NAME, name)
-            .putFloat(KEY_WEIGHT, weight.toFloat())
-            .putBoolean(KEY_FIRST_TIME_TOGGLE, false)
+        sharedPreferences.edit()
+            .putString(KEY_NAME, nameText)
+            .putFloat(KEY_WEIGHT, weightText.toFloat())
             .apply()
-        val toolbarText = "Let's go, $name!"
+        val toolbarText = "Let's go $nameText"
         requireActivity().tvToolbarTitle.text = toolbarText
         return true
     }
-
 
 
 }

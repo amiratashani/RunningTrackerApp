@@ -28,9 +28,6 @@ class SetupFragment : Fragment() {
     @set:Inject
     var isFirstAppOpen = true
 
-
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
