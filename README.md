@@ -1,5 +1,6 @@
 # RunningTrackerApp
-In this course you will make an app that tracks your run in the background. It will use the Google Maps SDK, MVVM Architecture, Dagger-Hilt, Navigation Components, Coroutines and a Room database.
+RunningTracker is a straight-forward easy to use app that tracks your pace, distance, calories burned and tim.Look back on past runs to track your progress and use set route within the app to discover new routes near you.
+It will use the Google Maps SDK, MVVM Architecture, Dagger-Hilt, Navigation Components, Coroutines and a Room database.
 
 # Introduction
 
